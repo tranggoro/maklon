@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Product Cost Calculator</title>
+    <style>
+        body {
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f5f0;
+            color: #333;
+            background-image: linear-gradient(to bottom, rgba(252, 180, 84, 0.1) 0%, rgba(248, 245, 240, 1) 100%);
+        }
+        h1 {
+            color: #b8860b;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
+        }
+        .calculator {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e6d8b5;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #5a4a3a;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d4c29a;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #fffdf9;
+            transition: all 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #b8860b;
+            box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2);
+        }
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 6px;
+            background-color: #fffdf9;
+            border: 1px solid #e6d8b5;
+            transition: all 0.3s;
+        }
+        .radio-option:hover {
+            border-color: #b8860b;
+        }
+        .radio-option input {
+            width: auto;
+            margin-right: 10px;
+            accent-color: #b8860b;
+        }
+        .summary {
+            background-color: #fffaf0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border: 1px solid #e6d8b5;
+            position: relative;
+            overflow: hidden;
+        }
+        .summary:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #b8860b, #d4af37);
+        }
+        .summary h3 {
+            margin-top: 0;
+            color: #8b6b3d;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .summary h3:before {
+            content: "✧";
+            margin-right: 8px;
+            color: #b8860b;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e6d8b5;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+            border-top: 1px solid #e6d8b5;
+            padding-top: 12px;
+            margin-top: 12px;
+            color: #8b6b3d;
+        }
+        .total span:last-child {
+            color: #b8860b;
+            font-size: 20px;
+        }
+        #whatsapp-btn {
+            background: linear-gradient(to right, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        #whatsapp-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .cart {
+            background-color: #fffaf0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border: 1px solid #e6d8b5;
+        }
+        .cart h3 {
+            margin-top: 0;
+            color: #8b6b3d;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .cart ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .cart ul li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart ul li button {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .cart ul li button:hover {
+            background: #8b6b3d;
+        }
+    </style>
+</head>
+<body>
+    <h1>Beauty Product Cost Calculator</h1>
+    
+    <div class="calculator">
+        <!-- Existing form elements -->
+        <div class="form-group">
+            <label for="product-type">Product Type</label>
+            <select id="product-type" required>
+                <option value="">Select a product type</option>
+                <option value="parfum">Parfum</option>
+                <option value="skincare">Skincare</option>
+                <option value="kosmetik">Kosmetik</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="product-size">Size</label>
+            <select id="product-size" required>
+                <option value="">Select a size</option>
+                <option value="10ml" data-price="15000">10ml - Rp 15,000</option>
+                <option value="20ml" data-price="25000">20ml - Rp 25,000</option>
+                <option value="30ml" data-price="35000">30ml - Rp 35,000</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+            <label>Packaging</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="no-packaging" name="packaging" value="0" checked>
+                    <label for="no-packaging">No packaging (Rp 0)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="basic-packaging" name="packaging" value="5000">
+                    <label for="basic-packaging">Basic packaging (Rp 5,000)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="executive-packaging" name="packaging" value="15000">
+                    <label for="executive-packaging">Executive packaging (Rp 15,000)</label>
+                </div>
+            </div>
+        </div>
+        <button id="add-to-cart-btn">Add to Cart</button>
+        <div class="cart">
+            <h3>Shopping Cart</h3>
+            <ul id="cart-items">
+                <li>No items in the cart</li>
+            </ul>
+            <div class="summary-item total">
+                <span>Total Cart Price:</span>
+                <span id="cart-total">Rp 0</span>
+            </div>
+        </div>
+        <button id="whatsapp-btn" disabled>
+            <span class="whatsapp-icon">📱</span>
+            Order via WhatsApp
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productTypeSelect = document.getElementById('product-type');
+            const productSizeSelect = document.getElementById('product-size');
+            const quantityInput = document.getElementById('quantity');
+            const packagingRadios = document.querySelectorAll('input[name="packaging"]');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const whatsappBtn = document.getElementById('whatsapp-btn');
+            let cart = [];
+
+            function updateCart() {
+                cartItems.innerHTML = '';
+                let totalCartPrice = 0;
+
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<li>No items in the cart</li>';
+                } else {
+                    cart.forEach((item, index) => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${item.quantity}x ${item.product} (${item.size}) - ${item.packaging} - Rp ${item.total.toLocaleString('id-ID')}`;
+                        const removeBtn = document.createElement('button');
+                        removeBtn.textContent = 'Remove';
+                        removeBtn.addEventListener('click', () => {
+                            cart.splice(index, 1);
+                            updateCart();
+                        });
+                        listItem.appendChild(removeBtn);
+                        cartItems.appendChild(listItem);
+                        totalCartPrice += item.total;
+                    });
+                }
+
+                cartTotal.textContent = `Rp ${totalCartPrice.toLocaleString('id-ID')}`;
+                whatsappBtn.disabled = cart.length === 0;
+            }
+
+            addToCartBtn.addEventListener('click', function() {
+                const productType = productTypeSelect.options[productTypeSelect.selectedIndex].text;
+                const productSize = productSizeSelect.options[productSizeSelect.selectedIndex].text;
+                const quantity = parseInt(quantityInput.value);
+                const packaging = document.querySelector('input[name="packaging"]:checked');
+                const packagingLabel = document.querySelector(`label[for="${packaging.id}"]`).textContent;
+
+                if (!productTypeSelect.value || !productSizeSelect.value || !quantity) {
+                    alert('Please complete the form before adding to the cart.');
+                    return;
+                }
+
+                const price = parseInt(productSizeSelect.selectedOptions[0].dataset.price);
+                const packagingCost = parseInt(packaging.value);
+                const total = (price * quantity) + packagingCost;
+
+                cart.push({
+                    product: productType,
+                    size: productSize,
+                    quantity: quantity,
+                    packaging: packagingLabel,
+                    total: total
+                });
+
+                updateCart();
+            });
+
+            whatsappBtn.addEventListener('click', function() {
+                const message = cart.map(item => 
+                    `${item.quantity}x ${item.product} (${item.size}) - ${item.packaging} - Rp ${item.total.toLocaleString('id-ID')}`
+                ).join('\n');
+                const totalCartPrice = cart.reduce((sum, item) => sum + item.total, 0);
+                const finalMessage = `Hello! I would like to order:\n\n${message}\n\nTotal: Rp ${totalCartPrice.toLocaleString('id-ID')}`;
+                const encodedMessage = encodeURIComponent(finalMessage);
+                const whatsappNumber = '6285648423768';
+                window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
